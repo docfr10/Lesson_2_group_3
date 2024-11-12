@@ -1,16 +1,19 @@
+// Ссылки на зависимости, которые используются ТОЛКЬО в модуле app
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
 }
 
+// Настройки приложения
 android {
     namespace = "com.example.lesson_2_group_3"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.lesson_2_group_3"
+        // Минимальная версия Android, на котором будет работать приложения
         minSdk = 23
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -35,8 +38,8 @@ android {
     }
 }
 
+// Ссылки на библиотеки
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
