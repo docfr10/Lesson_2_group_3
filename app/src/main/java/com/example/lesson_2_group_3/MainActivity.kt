@@ -3,6 +3,7 @@ package com.example.lesson_2_group_3
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.lesson_2_group_3.databinding.ActivityMainBinding
 
 // Класс MainActivity, наследник AppCompatActivity
 class MainActivity : AppCompatActivity() {
@@ -22,11 +24,17 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Вы нажати на кнопку через xml макет", Toast.LENGTH_SHORT).show()
     }
 
+    // Свойство, для использования библиотеки viewBinding
+    private lateinit var activityMainBinding: ActivityMainBinding
+
     // Метод onCreate — запускается при старте активности самым первым, либо после вызова onPause/onStop
     // Создает объекты пользовательского интерфейса для показа пользователю
     override fun onCreate(savedInstanceState: Bundle?) {
         // Вызов родительского метода
         super.onCreate(savedInstanceState)
+
+        // Инициализая свойства activityMainBinding
+        activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
 
         // Присвоение свойству showToast значения из Bundle хранилища с ключом SHOW_TOAST
         if (savedInstanceState != null)
@@ -37,7 +45,10 @@ class MainActivity : AppCompatActivity() {
 
         // Определяет то, как будет выглядеть экран
         // Содержит ссылку на файл activity_main.xml
-        setContentView(R.layout.activity_main)
+        // setContentView(R.layout.activity_main)
+
+        // Аналог вызова setContentView с использованием viewBinding
+        setContentView(activityMainBinding.root)
 
         // Задание отступов для элементов пользовательского интерфейса
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -93,6 +104,40 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Кнопка нажата", Toast.LENGTH_SHORT).show()
             button.text = "You clicked!"
         }
+
+        // Слушатель удержания кнопки
+        button.setOnLongClickListener {
+            button.text = "Long click!"
+            return@setOnLongClickListener true
+        }
+
+        // Использование объекта activityMainBinding для взаимодействия с элементами пользовательского интерфейса
+        // Смена текста в поле для ввода текста
+        activityMainBinding.editTextText.setText("New text in editText")
+        // Обработка введенного текста в поле для ввода
+        Toast.makeText(this, activityMainBinding.editTextText.text.toString(), Toast.LENGTH_LONG)
+            .show()
+
+        // Работа со Switch
+        activityMainBinding.switch1.setOnClickListener {
+            if (activityMainBinding.switch1.isChecked) {
+                activityMainBinding.switch1.isChecked = true
+                activityMainBinding.switch1.text = "Вкл"
+            } else {
+                activityMainBinding.switch1.isChecked = false
+                activityMainBinding.switch1.text = "Выкл"
+            }
+        }
+
+        // Работа со Spinner
+        // Создание адаптера, который содержит созданный список
+        val spinnerAdapter = ArrayAdapter(
+            this,
+            com.google.android.material.R.layout.support_simple_spinner_dropdown_item,
+            listOf("Java", "Kotlin", "PHP", "Python")
+        )
+        // Передача созданного адаптера в spinner
+        activityMainBinding.spinner.adapter = spinnerAdapter
     }
 
     // Метод onStart - запускается после onCreate/onRestart

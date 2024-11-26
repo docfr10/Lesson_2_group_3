@@ -9,6 +9,11 @@ android {
     namespace = "com.example.lesson_2_group_3"
     compileSdk = 35
 
+    // Включение библиотеки viewBinding
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.example.lesson_2_group_3"
         // Минимальная версия Android, на котором будет работать приложения
