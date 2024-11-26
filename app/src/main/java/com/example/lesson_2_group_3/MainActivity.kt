@@ -12,6 +12,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.ViewModelProvider
 import com.example.lesson_2_group_3.databinding.ActivityMainBinding
 
 // Класс MainActivity, наследник AppCompatActivity
@@ -27,6 +29,9 @@ class MainActivity : AppCompatActivity() {
     // Свойство, для использования библиотеки viewBinding
     private lateinit var activityMainBinding: ActivityMainBinding
 
+    // Свойство, отвечающее за работу с ViewModel
+    private lateinit var mainActivityViewModel: MainActivityViewModel
+
     // Метод onCreate — запускается при старте активности самым первым, либо после вызова onPause/onStop
     // Создает объекты пользовательского интерфейса для показа пользователю
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +40,10 @@ class MainActivity : AppCompatActivity() {
 
         // Инициализая свойства activityMainBinding
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
+
+        // Инициализация MainActivityViewModel
+        val viewModelProvider = ViewModelProvider(this)
+        mainActivityViewModel = viewModelProvider[MainActivityViewModel::class.java]
 
         // Присвоение свойству showToast значения из Bundle хранилища с ключом SHOW_TOAST
         if (savedInstanceState != null)
@@ -138,6 +147,30 @@ class MainActivity : AppCompatActivity() {
         )
         // Передача созданного адаптера в spinner
         activityMainBinding.spinner.adapter = spinnerAdapter
+
+        // Отображение введенного в поле для ввода текста в textView
+        activityMainBinding.floatingActionButton.setOnClickListener {
+            activityMainBinding.textView2.text =
+                activityMainBinding.editTextNumberPassword.text.toString()
+        }
+
+        // Создание наблюдателя за свойством editText
+        mainActivityViewModel.getEditText().observe(this) {
+            Log.i("ИЗМЕНЕНО", it.toString())
+            activityMainBinding.textView.text = it.toString()
+        }
+
+        // Слушатель введенного в поле для ввода текста
+        activityMainBinding.editTextText.addTextChangedListener {
+            // Изменение значения свойства editText
+            mainActivityViewModel.getEditText().value = it.toString()
+        }
+
+        // Работа с ресурсами в коде
+        activityMainBinding.button2.setOnClickListener {
+            button2.text = getString(R.string.new_text)
+            button2.setBackgroundColor(getColor(R.color.blue))
+        }
     }
 
     // Метод onStart - запускается после onCreate/onRestart

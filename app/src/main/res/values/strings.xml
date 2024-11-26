@@ -2,4 +2,5 @@
     <string name="app_name">Lesson_2_group_3</string>
 
     <string name="ncreate">Activity CREATED</string>
+    <string name="new_text">New button text</string>
 </resources>
